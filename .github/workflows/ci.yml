@@ -182,10 +182,11 @@ jobs:
 
       - name: Check licensing
         run: |
-          echo 'mvn ${MVN_COMMON_OPTIONS} exec:java@check-license -N \
+          command='mvn ${MVN_COMMON_OPTIONS} exec:java@check-license -N \
             -Dexec.args="${{ env.MVN_BUILD_OUTPUT_FILE }} $(pwd) ${{ env.MVN_VALIDATION_DIR }}" \
             ${{ env.MVN_CONNECTION_OPTIONS }} \
             -Dlog4j.configurationFile=file://$(pwd)/tools/ci/log4j.properties'
+          eval echo "$command"
           mvn ${MVN_COMMON_OPTIONS} exec:java@check-license -N \
             -Dexec.args="${{ env.MVN_BUILD_OUTPUT_FILE }} $(pwd) ${{ env.MVN_VALIDATION_DIR }}" \
             ${{ env.MVN_CONNECTION_OPTIONS }} \
