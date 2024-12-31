@@ -169,7 +169,16 @@ jobs:
         timeout-minutes: ${{ inputs.timeout_test }}
         run: |
           set -o pipefail
-
+          cmd='mvn clean deploy ${MVN_COMMON_OPTIONS} \
+            -DaltDeploymentRepository=validation_repository::default::file:${{ env.MVN_VALIDATION_DIR }} \
+            -Dscala-2.12 \
+            -Prun-end-to-end-tests -DdistDir=${{ env.FLINK_CACHE_DIR }}/flink-${{ inputs.flink_version }} \
+            ${{ env.MVN_DEPENDENCY_CONVERGENCE }} \
+            ${{ env.MVN_ARCHUNIT_TESTS }} \
+            ${{ env.MVN_CONNECTION_OPTIONS }} \
+            -Dlog4j.configurationFile=file://$(pwd)/tools/ci/log4j.properties \
+            | tee ${{ env.MVN_BUILD_OUTPUT_FILE }}'
+          eval echo "$cmd" 
           mvn clean deploy ${MVN_COMMON_OPTIONS} \
             -DaltDeploymentRepository=validation_repository::default::file:${{ env.MVN_VALIDATION_DIR }} \
             -Dscala-2.12 \
